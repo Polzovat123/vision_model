@@ -77,7 +77,7 @@ print(f"Количество триплетов в графе: {len(g)}")
 В данном разделе представлены примеры запросов к RDF-графу, демонстрирующие различные способы извлечения информации из структурированных данных. Запросы позволяют анализировать связи между сущностями, фильтровать данные по определенным критериям и получать агрегированные результаты.
 
 1. Получение всех текстовых фрагментов с эмоцией "anger"
-```
+```python
 anger_utterances = []
 for s, _, o in g.triples((None, EX.hasEmotion, None)):
     if str(o).lower() == "anger":
@@ -90,7 +90,7 @@ print(anger_utterances)
 print("------------------------")
 ```
 2. Поиск всех стримов в категории "sports"
-```
+```python
 sports_streams = []
 for s, _, o in g.triples((None, EX.category, None)):
     if str(o).lower() == "sports":
@@ -102,7 +102,7 @@ print("Категория 'sports':")
 print(sports_streams)
 ```
 3. Определение канала для конкретного текстового фрагмента
-```
+```python
 text_uri = EX["TEXT_04"]
 speaker = g.value(text_uri, EX.speaker)
 channel = g.value(speaker, EX.hasChannel)
@@ -115,7 +115,7 @@ print(channel_id)
 print("------------------------")
 ```
 4. Дополнительные примеры запросов
-```
+```python
 emotion_counts = Counter()
 for _, _, emotion in g.triples((None, EX.hasEmotion, None)):
     emotion_counts[str(emotion).lower()] += 1
