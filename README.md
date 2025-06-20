@@ -67,3 +67,61 @@ g.bind("foaf", FOAF)
 # ... (логика добавления триплетов из примера выше)
 print(f"Количество триплетов в графе: {len(g)}")
 ```
+
+## Граф знаний
+
+![Граф знаний](graph.png)
+
+## Пример запросов
+
+В данном разделе представлены примеры запросов к RDF-графу, демонстрирующие различные способы извлечения информации из структурированных данных. Запросы позволяют анализировать связи между сущностями, фильтровать данные по определенным критериям и получать агрегированные результаты.
+
+1. Получение всех текстовых фрагментов с эмоцией "anger"
+```
+anger_utterances = []
+for s, _, o in g.triples((None, EX.hasEmotion, None)):
+    if str(o).lower() == "anger":
+        text_literal = g.value(s, EX.text)
+        anger_utterances.append((str(s).split("/")[-1], str(text_literal)))
+
+print("------------------------")
+print("Эмоция 'anger':")
+print(anger_utterances)
+print("------------------------")
+```
+2. Поиск всех стримов в категории "sports"
+```
+sports_streams = []
+for s, _, o in g.triples((None, EX.category, None)):
+    if str(o).lower() == "sports":
+        name = g.value(s, FOAF.name)
+        sports_streams.append((str(s).split("/")[-1], str(name)))
+
+print("------------------------")
+print("Категория 'sports':")
+print(sports_streams)
+```
+3. Определение канала для конкретного текстового фрагмента
+```
+text_uri = EX["TEXT_04"]
+speaker = g.value(text_uri, EX.speaker)
+channel = g.value(speaker, EX.hasChannel)
+text_id = str(text_uri).split("/")[-1]
+channel_id = str(channel).split("/")[-1] if channel else "Нет канала"
+
+print("------------------------")
+print("TEXT_04 связан с каналом:")
+print(channel_id)
+print("------------------------")
+```
+4. Дополнительные примеры запросов
+```
+emotion_counts = Counter()
+for _, _, emotion in g.triples((None, EX.hasEmotion, None)):
+    emotion_counts[str(emotion).lower()] += 1
+
+print("------------------------")
+print("Распределение эмоций:")
+print(dict(emotion_counts))
+print("------------------------")
+```
